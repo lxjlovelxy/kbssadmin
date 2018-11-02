@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kbss.admin.cms.dao.EduBscLevelDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, code, name, short_name, memo, state, gmt_creater, gmt_modifier, gmt_create, gmt_modified
+    </sql>
+
+    <!-- 分页查询层次 -->
+    <select id="levelList" resultType="com.kbss.admin.cms.controller.resp.school.LevelListResp">
+        select
+        a.id AS levelId,
+        a.code AS levelCode,
+        a.name AS levelName,
+        a.memo AS memo,
+        a.state AS state,
+        a.short_name AS shortName
+        from edu_bsc_level a
+        <where>
+            a.project_id = #{param.projectId}
+            <if test ="param.shortName!=null and param.shortName!=''">
+                and a.short_name like CONCAT ('%',#{param.shortName},'%')
+            </if>
+            <if test="param.name!=null and param.name!=''">
+                and a.name like CONCAT ('%',#{param.name},'%')
+            </if>
+        </where>
+        order by a.id
+    </select>
+</mapper>

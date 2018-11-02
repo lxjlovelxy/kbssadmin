@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kbss.admin.cms.dao.SysMenuDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, parent_id, name, url,code, ico, grade, pos, style_id, memo, gmt_creater, gmt_modifier, gmt_create, gmt_modified
+    </sql>
+
+    <select id="menuByUserId" resultType="com.kbss.admin.cms.entity.SysMenu">
+        SELECT m.id as id,
+          m.parent_id as parentId,
+          t.menu_name as name,
+          m.url as url,
+          m.code as code,
+          m.ico as ico,
+          m.grade as grade,
+          m.pos as pos,
+          m.style_id as styleId,
+          m.memo as memo
+        FROM Sys_Menu m
+        LEFT JOIN Sys_User_Menu t
+        ON t.menu_id = m.id
+        WHERE m.grade &gt; 0 AND m.grade &lt; 3
+          AND t.user_id = #{userId} AND t.role_type = #{roleType}
+        ORDER BY m.grade ASC,m.pos ASC
+    </select>
+
+    <select id="maxPosByPid" resultType="java.lang.Integer">
+        SELECT MAX(pos) FROM Sys_Menu WHERE parent_id = #{parentId}
+    </select>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kbss.admin.cms.dao.SysRoleMenuDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, menu_id, role_id, menu_name
+    </sql>
+
+    <select id="menuByRoleId" resultType="com.kbss.admin.cms.entity.SysMenu">
+        SELECT m.id as id,
+          m.parent_id as parentId,
+          t.menu_name as name,
+          m.url as url,
+          m.code as code,
+          m.ico as ico,
+          m.grade as grade,
+          m.pos as pos,
+          m.style_id as styleId,
+          m.memo as memo
+        FROM Sys_Menu m
+        LEFT JOIN Sys_Role_Menu t
+        ON t.menu_id = m.id
+        WHERE m.grade &gt; 0 AND m.grade &lt; 3 AND t.role_id = #{roleId}
+        ORDER BY m.grade ASC,m.pos ASC
+    </select>
+</mapper>
